@@ -1,0 +1,150 @@
+.login-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #eff4fb 0%, #dee8f6 100%);
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #d6e1ef;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 16px 32px rgba(23, 39, 64, 0.12);
+}
+
+.login-card h1 {
+  margin: 0;
+  color: #1f3448;
+  font-size: 1.8rem;
+}
+
+.login-card p {
+  margin: 8px 0 16px;
+  color: #5a738c;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-form label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #27435c;
+}
+
+.login-form input {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #cad7e8;
+  font-size: 0.96rem;
+}
+
+.login-form button {
+  margin-top: 8px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, #ff5a61, #df2e43);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.login-form button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-error {
+  margin: 4px 0;
+  color: #cf2f44;
+  font-size: 0.9rem;
+}
+
+.login-form select {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #cad7e8;
+  font-size: 0.96rem;
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
+.location-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 12px 0 8px 0;
+}
+
+.location-fields div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.location-fields label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #27435c;
+  margin: 0;
+}
+
+.location-fields input {
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid #cad7e8;
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.location-hint {
+  margin: 4px 0 8px;
+  font-size: 0.85rem;
+  color: #5a738c;
+}
+
+.toggle-mode {
+  margin-top: 12px;
+  text-align: center;
+  color: #5a738c;
+  font-size: 0.9rem;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: #ff5a61;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-size: 0.9rem;
+}
+
+.toggle-btn:hover {
+  color: #df2e43;
+}
+
+.login-hint {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid #e1eaf4;
+}
+
+.login-hint p {
+  margin: 2px 0;
+  font-size: 0.86rem;
+}
