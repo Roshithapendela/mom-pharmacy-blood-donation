@@ -15,7 +15,7 @@
 
 .search-panel {
   display: grid;
-  grid-template-columns: 1fr 1.2fr 0.8fr;
+  grid-template-columns: 1fr 1fr 1.2fr 0.8fr;
   gap: 10px;
   background: #ffffff;
   border: 1px solid #d5deea;
@@ -25,7 +25,8 @@
 }
 
 .btn,
-.blood-select {
+.blood-select,
+.city-select {
   height: 48px;
   border-radius: 12px;
   border: 1px solid #c8d1dd;
@@ -73,7 +74,8 @@
   opacity: 0.6;
 }
 
-.blood-select {
+.blood-select,
+.city-select {
   background: #fff;
   padding: 0 12px;
   color: #334e68;

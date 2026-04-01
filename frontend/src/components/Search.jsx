@@ -16,6 +16,21 @@ import "leaflet/dist/leaflet.css";
 import "./Search.css";
 import { API_BASE_URL } from "../config/api.js";
 
+const CITY_COORDINATES = {
+  Hyderabad: { latitude: 17.4213, longitude: 78.3478 },
+  Mumbai: { latitude: 19.0759, longitude: 72.8776 },
+  Delhi: { latitude: 28.7041, longitude: 77.1025 },
+  Bangalore: { latitude: 12.9716, longitude: 77.5946 },
+  Kolkata: { latitude: 22.5726, longitude: 88.3639 },
+  Chennai: { latitude: 13.0827, longitude: 80.2707 },
+  Pune: { latitude: 18.5204, longitude: 73.8567 },
+  Jaipur: { latitude: 26.9124, longitude: 75.7873 },
+  Lucknow: { latitude: 26.8467, longitude: 80.9462 },
+  Ahmedabad: { latitude: 23.0225, longitude: 72.5714 },
+};
+
+const cityNames = Object.keys(CITY_COORDINATES);
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
@@ -48,7 +63,7 @@ const RecenterMap = ({ center }) => {
   return null;
 };
 
-const Search = ({ token, onAuthError }) => {
+const Search = () => {
   const [bloodGroup, setBloodGroup] = useState("all");
   const [users, setUsers] = useState([]);
   const [nearbyUsers, setNearbyUsers] = useState([]);
@@ -56,6 +71,7 @@ const Search = ({ token, onAuthError }) => {
   const [loading, setLoading] = useState(false);
   const [locationText, setLocationText] = useState("Location not selected");
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const [selectedCity, setSelectedCity] = useState("Hyderabad");
 
   const bloodGroupOptions = [
     "all",
@@ -69,62 +85,24 @@ const Search = ({ token, onAuthError }) => {
     "AB-",
   ];
 
-  // Fetch logged-in user's location from their profile on mount
-  useEffect(() => {
-    const fetchUserLocation = async () => {
-      try {
-        const res = await axios.get(`${API_BASE_URL}/api/users/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const userData = res.data.user;
-        if (userData.latitude && userData.longitude) {
-          const userLocation = {
-            latitude: userData.latitude,
-            longitude: userData.longitude,
-          };
-          setLocation(userLocation);
-          setLocationText(
-            `${userLocation.latitude.toFixed(4)}, ${userLocation.longitude.toFixed(4)}`,
-          );
-        }
-      } catch (error) {
-        console.error("Failed to fetch user location:", error);
-      }
-    };
-
-    fetchUserLocation();
-  }, [token]);
-
   // Fetch all users from database on component mount
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
         const res = await axios.get(
           `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
 
         const dbUsers = res.data.users || [];
         setUsers(dbUsers);
       } catch (error) {
         console.error("Failed to fetch users:", error);
-        if (error.response?.status === 401 && onAuthError) {
-          onAuthError();
-          return;
-        }
         setUsers([]);
       }
     };
 
     fetchAllUsers();
-  }, [token, onAuthError]);
+  }, []);
 
   const filteredUsers = useMemo(() => {
     if (!bloodGroup || bloodGroup === "all") return users;
@@ -162,6 +140,17 @@ const Search = ({ token, onAuthError }) => {
     );
   };
 
+  const handleCitySelect = (city) => {
+    const coords = CITY_COORDINATES[city];
+    if (coords) {
+      setLocation(coords);
+      setLocationText(
+        `${city} (${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)})`,
+      );
+      setSelectedCity(city);
+    }
+  };
+
   const handleSearch = async () => {
     if (!location) {
       alert("Please get location first.");
@@ -172,11 +161,6 @@ const Search = ({ token, onAuthError }) => {
     try {
       const res = await axios.get(
         `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=${location.latitude}&longitude=${location.longitude}&radius=10000`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
       );
 
       const apiUsers = res.data.users || [];
@@ -184,10 +168,6 @@ const Search = ({ token, onAuthError }) => {
       setIsSearchMode(true);
     } catch (error) {
       console.error(error);
-      if (error.response?.status === 401 && onAuthError) {
-        onAuthError();
-        return;
-      }
       alert("Search failed.");
     } finally {
       setLoading(false);
@@ -199,11 +179,6 @@ const Search = ({ token, onAuthError }) => {
     try {
       const res = await axios.get(
         `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
       );
 
       const dbUsers = res.data.users || [];
@@ -236,6 +211,19 @@ const Search = ({ token, onAuthError }) => {
         >
           {loading ? "Getting Location..." : "Get My Location"}
         </button>
+
+        <select
+          className="city-select"
+          value={selectedCity}
+          onChange={(e) => handleCitySelect(e.target.value)}
+        >
+          <option value="">Select a city</option>
+          {cityNames.map((city) => (
+            <option key={city} value={city}>
+              {city}
+            </option>
+          ))}
+        </select>
 
         <select
           className="blood-select"

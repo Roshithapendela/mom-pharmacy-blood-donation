@@ -20,20 +20,44 @@ const allowedOrigins = (process.env.CORS_ORIGIN || "")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-const corsOptions =
-  allowedOrigins.length > 0
-    ? {
-        origin: (origin, callback) => {
-          // Allow non-browser clients and explicitly allowed origins.
-          if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-            return;
-          }
+const isDefaultAllowedOrigin = (origin) => {
+  if (!origin) {
+    return true;
+  }
 
-          callback(new Error("Origin not allowed by CORS"));
-        },
-      }
-    : {};
+  try {
+    const parsedOrigin = new URL(origin);
+    const hostname = parsedOrigin.hostname;
+
+    if (hostname === "localhost" || hostname === "127.0.0.1") {
+      return true;
+    }
+
+    if (hostname.endsWith(".vercel.app")) {
+      return true;
+    }
+  } catch (_error) {
+    return false;
+  }
+
+  return false;
+};
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser clients, configured origins, localhost, and Vercel domains.
+    if (
+      !origin ||
+      allowedOrigins.includes(origin) ||
+      isDefaultAllowedOrigin(origin)
+    ) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error("Origin not allowed by CORS"));
+  },
+};
 
 // Middleware
 app.use(cors(corsOptions));
