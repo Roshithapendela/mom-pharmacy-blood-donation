@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Search from "./components/Search.jsx";
 import AuthForm from "./components/AuthForm.jsx";
+import { API_BASE_URL } from "./config/api.js";
 import "./App.css";
-
-const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
 
 function App() {
   const [token, setToken] = useState("");
@@ -40,7 +39,7 @@ function App() {
           },
         );
       }
-    } catch (_error) {
+    } catch {
       // Logout is stateless; always clear local session.
     } finally {
       localStorage.removeItem("authToken");
@@ -74,7 +73,7 @@ function App() {
       </header>
 
       <main className="app-main">
-        <Search token={token} user={user} onAuthError={handleLogout} />
+        <Search token={token} onAuthError={handleLogout} />
       </main>
     </div>
   );

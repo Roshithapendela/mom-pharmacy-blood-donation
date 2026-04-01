@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 const signup = async (req, res) => {
   try {
     const { name, email, password, contact, bloodGroup, latitude, longitude } =
@@ -40,13 +42,12 @@ const signup = async (req, res) => {
 
     await newUser.save();
 
-    const jwtSecret = process.env.JWT_SECRET || "change-me-in-env";
     const token = jwt.sign(
       {
         id: newUser._id,
         email: newUser.email,
       },
-      jwtSecret,
+      JWT_SECRET,
       { expiresIn: "1d" },
     );
 
@@ -87,14 +88,12 @@ const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const jwtSecret = process.env.JWT_SECRET || "change-me-in-env";
-
     const token = jwt.sign(
       {
         id: user._id,
         email: user.email,
       },
-      jwtSecret,
+      JWT_SECRET,
       { expiresIn: "1d" },
     );
 

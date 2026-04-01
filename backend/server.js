@@ -10,8 +10,33 @@ const authRoutes = require("./routes/authRoutes");
 
 const app = express();
 
+if (!process.env.JWT_SECRET) {
+  console.error("JWT_SECRET is required to start the server");
+  process.exit(1);
+}
+
+const allowedOrigins = (process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsOptions =
+  allowedOrigins.length > 0
+    ? {
+        origin: (origin, callback) => {
+          // Allow non-browser clients and explicitly allowed origins.
+          if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+            return;
+          }
+
+          callback(new Error("Origin not allowed by CORS"));
+        },
+      }
+    : {};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // DB Connection

@@ -14,8 +14,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import "./Search.css";
-
-const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
+import { API_BASE_URL } from "../config/api.js";
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
@@ -49,7 +48,7 @@ const RecenterMap = ({ center }) => {
   return null;
 };
 
-const Search = ({ token, user, onAuthError }) => {
+const Search = ({ token, onAuthError }) => {
   const [bloodGroup, setBloodGroup] = useState("all");
   const [users, setUsers] = useState([]);
   const [nearbyUsers, setNearbyUsers] = useState([]);

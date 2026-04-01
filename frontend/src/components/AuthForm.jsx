@@ -1,8 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import "./Login.css";
-
-const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
+import { API_BASE_URL } from "../config/api.js";
 
 const AuthForm = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);

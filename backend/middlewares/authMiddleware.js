@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
@@ -10,8 +12,7 @@ const protect = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const jwtSecret = process.env.JWT_SECRET || "change-me-in-env";
-    const decoded = jwt.verify(token, jwtSecret);
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;
     next();
   } catch (_error) {
