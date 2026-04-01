@@ -6,14 +6,8 @@ dotenv.config();
 
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./routes/authRoutes");
 
 const app = express();
-
-if (!process.env.JWT_SECRET) {
-  console.error("JWT_SECRET is required to start the server");
-  process.exit(1);
-}
 
 const allowedOrigins = (process.env.CORS_ORIGIN || "")
   .split(",")
@@ -67,7 +61,6 @@ app.use(express.json());
 connectDB();
 
 // Routes
-app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 // Test Route

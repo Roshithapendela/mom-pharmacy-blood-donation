@@ -67,9 +67,14 @@ const Search = () => {
   const [bloodGroup, setBloodGroup] = useState("all");
   const [users, setUsers] = useState([]);
   const [nearbyUsers, setNearbyUsers] = useState([]);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState({
+    latitude: 17.4213,
+    longitude: 78.3478,
+  });
   const [loading, setLoading] = useState(false);
-  const [locationText, setLocationText] = useState("Location not selected");
+  const [locationText, setLocationText] = useState(
+    "Hyderabad (17.4213, 78.3478)",
+  );
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [selectedCity, setSelectedCity] = useState("Hyderabad");
 
@@ -119,27 +124,6 @@ const Search = () => {
     [users],
   );
 
-  const getLocation = () => {
-    setLoading(true);
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const currentLocation = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        };
-        setLocation(currentLocation);
-        setLocationText(
-          `${currentLocation.latitude.toFixed(4)}, ${currentLocation.longitude.toFixed(4)}`,
-        );
-        setLoading(false);
-      },
-      () => {
-        setLocationText("Could not fetch your location");
-        setLoading(false);
-      },
-    );
-  };
-
   const handleCitySelect = (city) => {
     const coords = CITY_COORDINATES[city];
     if (coords) {
@@ -152,11 +136,6 @@ const Search = () => {
   };
 
   const handleSearch = async () => {
-    if (!location) {
-      alert("Please get location first.");
-      return;
-    }
-
     setLoading(true);
     try {
       const res = await axios.get(
@@ -204,14 +183,6 @@ const Search = () => {
       <h1 className="dashboard-title">Find Blood Donors Near You</h1>
 
       <div className="search-panel">
-        <button
-          className="btn btn-location"
-          onClick={getLocation}
-          disabled={loading}
-        >
-          {loading ? "Getting Location..." : "Get My Location"}
-        </button>
-
         <select
           className="city-select"
           value={selectedCity}
