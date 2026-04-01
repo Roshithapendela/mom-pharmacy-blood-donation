@@ -2,6 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import "./Login.css";
 
+const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
+
 const AuthForm = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -24,7 +26,7 @@ const AuthForm = ({ onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         email,
         password,
       });
@@ -46,7 +48,7 @@ const AuthForm = ({ onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/signup`, {
         name,
         email,
         password,

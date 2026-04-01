@@ -4,6 +4,8 @@ import Search from "./components/Search.jsx";
 import AuthForm from "./components/AuthForm.jsx";
 import "./App.css";
 
+const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
+
 function App() {
   const [token, setToken] = useState("");
   const [user, setUser] = useState(null);
@@ -29,7 +31,7 @@ function App() {
     try {
       if (token) {
         await axios.post(
-          "http://localhost:5000/api/auth/logout",
+          `${API_BASE_URL}/api/auth/logout`,
           {},
           {
             headers: {

@@ -15,6 +15,8 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import "leaflet/dist/leaflet.css";
 import "./Search.css";
 
+const API_BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
@@ -72,7 +74,7 @@ const Search = ({ token, user, onAuthError }) => {
   useEffect(() => {
     const fetchUserLocation = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/users/me", {
+        const res = await axios.get(`${API_BASE_URL}/api/users/me`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -102,7 +104,7 @@ const Search = ({ token, user, onAuthError }) => {
     const fetchAllUsers = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:5000/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
+          `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -170,7 +172,7 @@ const Search = ({ token, user, onAuthError }) => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/users/search?bloodGroup=all&latitude=${location.latitude}&longitude=${location.longitude}&radius=10000`,
+        `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=${location.latitude}&longitude=${location.longitude}&radius=10000`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -197,7 +199,7 @@ const Search = ({ token, user, onAuthError }) => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
+        `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
