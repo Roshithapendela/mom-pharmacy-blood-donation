@@ -8,31 +8,31 @@ const User = require("./models/User");
 const DUMMY_DONORS = [
   // Hyderabad
   {
-    name: "Rajesh Kumar",
+    name: "Kiran Reddy",
     bloodGroup: "O+",
     contact: "9876543210",
     location: { type: "Point", coordinates: [78.3478, 17.4213] },
   },
   {
-    name: "Priya Sharma",
+    name: "Sowmya Rao",
     bloodGroup: "A+",
     contact: "8765432109",
     location: { type: "Point", coordinates: [78.35, 17.42] },
   },
   {
-    name: "Amit Singh",
+    name: "Naveen Goud",
     bloodGroup: "B+",
     contact: "7654321098",
     location: { type: "Point", coordinates: [78.35, 17.41] },
   },
   {
-    name: "Neha Gupta",
+    name: "Divya Rani",
     bloodGroup: "B-",
     contact: "9123456789",
     location: { type: "Point", coordinates: [78.36, 17.43] },
   },
   {
-    name: "Vikram Reddy",
+    name: "Rahul Teja",
     bloodGroup: "AB+",
     contact: "9234567890",
     location: { type: "Point", coordinates: [78.32, 17.42] },
@@ -40,25 +40,25 @@ const DUMMY_DONORS = [
 
   // Mumbai
   {
-    name: "Rohit Patel",
+    name: "Aarav Mehta",
     bloodGroup: "O+",
     contact: "9345678901",
     location: { type: "Point", coordinates: [72.8776, 19.0759] },
   },
   {
-    name: "Anjali Verma",
+    name: "Ishita Shah",
     bloodGroup: "A+",
     contact: "9456789012",
     location: { type: "Point", coordinates: [72.88, 19.08] },
   },
   {
-    name: "Suresh Menon",
+    name: "Yash Kulkarni",
     bloodGroup: "B+",
     contact: "9567890123",
     location: { type: "Point", coordinates: [72.87, 19.07] },
   },
   {
-    name: "Pooja Desai",
+    name: "Riya Deshmukh",
     bloodGroup: "O-",
     contact: "9678901234",
     location: { type: "Point", coordinates: [72.89, 19.09] },
@@ -66,25 +66,25 @@ const DUMMY_DONORS = [
 
   // Delhi
   {
-    name: "Arjun Kapoor",
+    name: "Kabir Malhotra",
     bloodGroup: "A+",
     contact: "9789012345",
     location: { type: "Point", coordinates: [77.1025, 28.7041] },
   },
   {
-    name: "Meera Singh",
+    name: "Aditi Bansal",
     bloodGroup: "B+",
     contact: "9890123456",
     location: { type: "Point", coordinates: [77.11, 28.71] },
   },
   {
-    name: "Harsh Pandey",
+    name: "Raghav Tandon",
     bloodGroup: "AB-",
     contact: "9901234567",
     location: { type: "Point", coordinates: [77.1, 28.7] },
   },
   {
-    name: "Divya Joshi",
+    name: "Naina Sethi",
     bloodGroup: "O+",
     contact: "9012345678",
     location: { type: "Point", coordinates: [77.12, 28.72] },
@@ -92,19 +92,19 @@ const DUMMY_DONORS = [
 
   // Bangalore
   {
-    name: "Arun Kumar",
+    name: "Pranav Shetty",
     bloodGroup: "O+",
     contact: "8123456789",
     location: { type: "Point", coordinates: [77.5946, 12.9716] },
   },
   {
-    name: "Swati Agarwal",
+    name: "Megha Nair",
     bloodGroup: "B+",
     contact: "8234567890",
     location: { type: "Point", coordinates: [77.6, 12.98] },
   },
   {
-    name: "Nikhil Rao",
+    name: "Rohit Hegde",
     bloodGroup: "A-",
     contact: "8345678901",
     location: { type: "Point", coordinates: [77.58, 12.96] },
@@ -112,13 +112,13 @@ const DUMMY_DONORS = [
 
   // Kolkata
   {
-    name: "Sanjay Dutta",
+    name: "Anirban Ghosh",
     bloodGroup: "O+",
     contact: "8456789012",
     location: { type: "Point", coordinates: [88.3639, 22.5726] },
   },
   {
-    name: "Ananya Roy",
+    name: "Mouli Banerjee",
     bloodGroup: "A+",
     contact: "8567890123",
     location: { type: "Point", coordinates: [88.37, 22.58] },
@@ -126,13 +126,13 @@ const DUMMY_DONORS = [
 
   // Chennai
   {
-    name: "Charan Iyer",
+    name: "Arvind Subramani",
     bloodGroup: "B+",
     contact: "8678901234",
     location: { type: "Point", coordinates: [80.2707, 13.0827] },
   },
   {
-    name: "Lakshmi Naidu",
+    name: "Keerthana Ravi",
     bloodGroup: "O-",
     contact: "8789012345",
     location: { type: "Point", coordinates: [80.28, 13.09] },
@@ -140,13 +140,13 @@ const DUMMY_DONORS = [
 
   // Pune
   {
-    name: "Abhishek Patil",
+    name: "Omkar Jagtap",
     bloodGroup: "A+",
     contact: "8890123456",
     location: { type: "Point", coordinates: [73.8567, 18.5204] },
   },
   {
-    name: "Sneha Marathe",
+    name: "Tanvi Kale",
     bloodGroup: "AB+",
     contact: "8901234567",
     location: { type: "Point", coordinates: [73.86, 18.53] },
@@ -154,13 +154,13 @@ const DUMMY_DONORS = [
 
   // Jaipur
   {
-    name: "Ravi Singh",
+    name: "Lakshya Rathore",
     bloodGroup: "O+",
     contact: "9123456780",
     location: { type: "Point", coordinates: [75.7873, 26.9124] },
   },
   {
-    name: "Ritika Sharma",
+    name: "Pihu Choudhary",
     bloodGroup: "B-",
     contact: "9023456781",
     location: { type: "Point", coordinates: [75.79, 26.92] },
@@ -168,13 +168,13 @@ const DUMMY_DONORS = [
 
   // Lucknow
   {
-    name: "Karan Malik",
+    name: "Aman Srivastava",
     bloodGroup: "A+",
     contact: "8912345670",
     location: { type: "Point", coordinates: [80.9462, 26.8467] },
   },
   {
-    name: "Neha Mishra",
+    name: "Shreya Tripathi",
     bloodGroup: "O+",
     contact: "8823456781",
     location: { type: "Point", coordinates: [80.95, 26.85] },
@@ -182,13 +182,13 @@ const DUMMY_DONORS = [
 
   // Ahmedabad
   {
-    name: "Jay Patel",
+    name: "Dhruv Trivedi",
     bloodGroup: "B+",
     contact: "8734567892",
     location: { type: "Point", coordinates: [72.5714, 23.0225] },
   },
   {
-    name: "Rita Kapoor",
+    name: "Mahi Vyas",
     bloodGroup: "A-",
     contact: "8645678903",
     location: { type: "Point", coordinates: [72.58, 23.03] },

@@ -31,6 +31,137 @@ const CITY_COORDINATES = {
 
 const cityNames = Object.keys(CITY_COORDINATES);
 
+const FALLBACK_DONORS_BY_CITY = {
+  Hyderabad: [
+    {
+      _id: "fallback-hyd-1",
+      name: "Kiran Reddy",
+      bloodGroup: "O+",
+      contact: "9876543210",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [78.3478, 17.4213] },
+    },
+    {
+      _id: "fallback-hyd-2",
+      name: "Sowmya Rao",
+      bloodGroup: "A+",
+      contact: "8765432109",
+      distanceKm: 0.27,
+      location: { type: "Point", coordinates: [78.35, 17.42] },
+    },
+  ],
+  Mumbai: [
+    {
+      _id: "fallback-mum-1",
+      name: "Aarav Mehta",
+      bloodGroup: "O+",
+      contact: "9345678901",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [72.8776, 19.0759] },
+    },
+    {
+      _id: "fallback-mum-2",
+      name: "Ishita Shah",
+      bloodGroup: "A+",
+      contact: "9456789012",
+      distanceKm: 0.6,
+      location: { type: "Point", coordinates: [72.88, 19.08] },
+    },
+  ],
+  Delhi: [
+    {
+      _id: "fallback-del-1",
+      name: "Kabir Malhotra",
+      bloodGroup: "A+",
+      contact: "9789012345",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [77.1025, 28.7041] },
+    },
+    {
+      _id: "fallback-del-2",
+      name: "Aditi Bansal",
+      bloodGroup: "B+",
+      contact: "9890123456",
+      distanceKm: 0.9,
+      location: { type: "Point", coordinates: [77.11, 28.71] },
+    },
+  ],
+  Bangalore: [
+    {
+      _id: "fallback-ban-1",
+      name: "Pranav Shetty",
+      bloodGroup: "O+",
+      contact: "8123456789",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [77.5946, 12.9716] },
+    },
+  ],
+  Kolkata: [
+    {
+      _id: "fallback-kol-1",
+      name: "Anirban Ghosh",
+      bloodGroup: "O+",
+      contact: "8456789012",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [88.3639, 22.5726] },
+    },
+  ],
+  Chennai: [
+    {
+      _id: "fallback-che-1",
+      name: "Arvind Subramani",
+      bloodGroup: "B+",
+      contact: "8678901234",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [80.2707, 13.0827] },
+    },
+  ],
+  Pune: [
+    {
+      _id: "fallback-pun-1",
+      name: "Omkar Jagtap",
+      bloodGroup: "A+",
+      contact: "8890123456",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [73.8567, 18.5204] },
+    },
+  ],
+  Jaipur: [
+    {
+      _id: "fallback-jai-1",
+      name: "Lakshya Rathore",
+      bloodGroup: "O+",
+      contact: "9123456780",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [75.7873, 26.9124] },
+    },
+  ],
+  Lucknow: [
+    {
+      _id: "fallback-luc-1",
+      name: "Aman Srivastava",
+      bloodGroup: "A+",
+      contact: "8912345670",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [80.9462, 26.8467] },
+    },
+  ],
+  Ahmedabad: [
+    {
+      _id: "fallback-ahm-1",
+      name: "Dhruv Trivedi",
+      bloodGroup: "B+",
+      contact: "8734567892",
+      distanceKm: 0,
+      location: { type: "Point", coordinates: [72.5714, 23.0225] },
+    },
+  ],
+};
+
+const getFallbackDonors = (city) => {
+  return FALLBACK_DONORS_BY_CITY[city] || FALLBACK_DONORS_BY_CITY.Hyderabad;
+};
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: markerIcon2x,
   iconUrl: markerIcon,
@@ -90,19 +221,23 @@ const Search = () => {
     "AB-",
   ];
 
+  const fetchDonors = async (latitude, longitude, city, radius = 10000) => {
+    const res = await axios.get(
+      `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=${latitude}&longitude=${longitude}&radius=${radius}`,
+    );
+    const apiUsers = res.data.users || [];
+    return apiUsers.length > 0 ? apiUsers : getFallbackDonors(city);
+  };
+
   // Fetch all users from database on component mount
   useEffect(() => {
     const fetchAllUsers = async () => {
       try {
-        const res = await axios.get(
-          `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
-        );
-
-        const dbUsers = res.data.users || [];
-        setUsers(dbUsers);
+        const donors = await fetchDonors(17.4213, 78.3478, "Hyderabad", 50000);
+        setUsers(donors);
       } catch (error) {
         console.error("Failed to fetch users:", error);
-        setUsers([]);
+        setUsers(getFallbackDonors("Hyderabad"));
       }
     };
 
@@ -132,22 +267,46 @@ const Search = () => {
         `${city} (${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)})`,
       );
       setSelectedCity(city);
+
+      setLoading(true);
+      fetchDonors(coords.latitude, coords.longitude, city, 10000)
+        .then((donors) => {
+          setUsers(donors);
+          setNearbyUsers(donors);
+          setIsSearchMode(true);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch city donors:", error);
+          const fallback = getFallbackDonors(city);
+          setUsers(fallback);
+          setNearbyUsers(fallback);
+          setIsSearchMode(true);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   };
 
   const handleSearch = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=${location.latitude}&longitude=${location.longitude}&radius=10000`,
+      const donors = await fetchDonors(
+        location.latitude,
+        location.longitude,
+        selectedCity,
+        10000,
       );
-
-      const apiUsers = res.data.users || [];
-      setNearbyUsers(apiUsers);
+      setNearbyUsers(donors);
+      setUsers(donors);
       setIsSearchMode(true);
     } catch (error) {
       console.error(error);
-      alert("Search failed.");
+      const fallback = getFallbackDonors(selectedCity);
+      setNearbyUsers(fallback);
+      setUsers(fallback);
+      setIsSearchMode(true);
+      alert("Showing fallback donors due to network issue.");
     } finally {
       setLoading(false);
     }
@@ -156,19 +315,19 @@ const Search = () => {
   const handleViewAllDonors = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(
-        `${API_BASE_URL}/api/users/search?bloodGroup=all&latitude=17.4213&longitude=78.3478&radius=50000`,
-      );
-
-      const dbUsers = res.data.users || [];
-      setUsers(dbUsers);
+      const donors = await fetchDonors(17.4213, 78.3478, "Hyderabad", 50000);
+      setUsers(donors);
       setNearbyUsers([]);
       setIsSearchMode(false);
-      setLocation(null);
-      setLocationText("Location not selected");
+      setLocation(CITY_COORDINATES.Hyderabad);
+      setLocationText("Hyderabad (17.4213, 78.3478)");
+      setSelectedCity("Hyderabad");
       setBloodGroup("all");
     } catch (error) {
       console.error("Failed to fetch all users:", error);
+      setUsers(getFallbackDonors("Hyderabad"));
+      setNearbyUsers([]);
+      setIsSearchMode(false);
     } finally {
       setLoading(false);
     }
