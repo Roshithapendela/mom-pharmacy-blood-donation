@@ -3,6 +3,18 @@ import axios from "axios";
 import "./Login.css";
 import { API_BASE_URL } from "../config/api.js";
 
+const getRequestErrorMessage = (err, fallbackMessage) => {
+  if (err.response?.data?.message) {
+    return err.response.data.message;
+  }
+
+  if (err.message === "Network Error") {
+    return "Cannot reach server. Check deployed API URL and CORS settings.";
+  }
+
+  return fallbackMessage;
+};
+
 const Login = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,7 +37,7 @@ const Login = ({ onLoginSuccess }) => {
       localStorage.setItem("authUser", JSON.stringify(res.data.user));
       onLoginSuccess(token, res.data.user);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(getRequestErrorMessage(err, "Login failed"));
     } finally {
       setLoading(false);
     }

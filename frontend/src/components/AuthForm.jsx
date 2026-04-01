@@ -3,6 +3,21 @@ import axios from "axios";
 import "./Login.css";
 import { API_BASE_URL } from "../config/api.js";
 
+const DEFAULT_LATITUDE = 17.4213;
+const DEFAULT_LONGITUDE = 78.3478;
+
+const getRequestErrorMessage = (err, fallbackMessage) => {
+  if (err.response?.data?.message) {
+    return err.response.data.message;
+  }
+
+  if (err.message === "Network Error") {
+    return "Cannot reach server. Check deployed API URL and CORS settings.";
+  }
+
+  return fallbackMessage;
+};
+
 const AuthForm = ({ onLoginSuccess }) => {
   const [isSignup, setIsSignup] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -35,7 +50,7 @@ const AuthForm = ({ onLoginSuccess }) => {
       localStorage.setItem("authUser", JSON.stringify(res.data.user));
       onLoginSuccess(token, res.data.user);
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(getRequestErrorMessage(err, "Login failed"));
     } finally {
       setLoading(false);
     }
@@ -46,6 +61,15 @@ const AuthForm = ({ onLoginSuccess }) => {
     setError("");
     setLoading(true);
 
+    const parsedLatitude = parseFloat(latitude);
+    const parsedLongitude = parseFloat(longitude);
+    const safeLatitude = Number.isFinite(parsedLatitude)
+      ? parsedLatitude
+      : DEFAULT_LATITUDE;
+    const safeLongitude = Number.isFinite(parsedLongitude)
+      ? parsedLongitude
+      : DEFAULT_LONGITUDE;
+
     try {
       const res = await axios.post(`${API_BASE_URL}/api/auth/signup`, {
         name,
@@ -53,8 +77,8 @@ const AuthForm = ({ onLoginSuccess }) => {
         password,
         contact,
         bloodGroup,
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
+        latitude: safeLatitude,
+        longitude: safeLongitude,
       });
 
       const token = res.data.token;
@@ -62,7 +86,7 @@ const AuthForm = ({ onLoginSuccess }) => {
       localStorage.setItem("authUser", JSON.stringify(res.data.user));
       onLoginSuccess(token, res.data.user);
     } catch (err) {
-      setError(err.response?.data?.message || "Signup failed");
+      setError(getRequestErrorMessage(err, "Signup failed"));
     } finally {
       setLoading(false);
     }
